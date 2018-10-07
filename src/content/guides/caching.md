@@ -310,13 +310,7 @@ __webpack.config.js__
       new HtmlWebpackPlugin({
         title: 'Caching'
       }),
-+     new webpack.HashedModuleIdsPlugin(),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor'
-      }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'manifest'
-      })
++     new webpack.HashedModuleIdsPlugin()
     ],
     output: {
       filename: '[name].[chunkhash].js',
@@ -328,20 +322,27 @@ __webpack.config.js__
 现在，不管再添加任何新的本地依赖，对于每次构建，`vendor` hash 都应该保持一致：
 
 ``` bash
-Hash: 1f49b42afb9a5acfbaff
-Version: webpack 3.3.0
-Time: 1372ms
-                           Asset       Size  Chunks                    Chunk Names
-  vendor.eed6dcc3b30cfa138aaa.js     541 kB       0  [emitted]  [big]  vendor
-    main.d103ac311788fcb7e329.js    1.22 kB       1  [emitted]         main
-manifest.d2a6dc1ccece13f5a164.js    5.85 kB       2  [emitted]         manifest
-                      index.html  352 bytes          [emitted]
-[3Di9] ./src/print.js 62 bytes {1} [built]
-[3IRH] (webpack)/buildin/module.js 517 bytes {0} [built]
-[DuR2] (webpack)/buildin/global.js 509 bytes {0} [built]
-   [0] multi lodash 28 bytes {0} [built]
-[lVK7] ./src/index.js 421 bytes {1} [built]
+Hash: 17c37ce65c84b8ed5eb8
+Version: webpack 4.16.2
+Time: 637ms
+                          Asset       Size  Chunks             Chunk Names
+   main.216e852f60c8829c2289.js  340 bytes       0  [emitted]  main
+vendors.55e79e5927a639d21a1b.js   69.5 KiB       1  [emitted]  vendors
+runtime.725a1a51ede5ae0cfde0.js   1.42 KiB       2  [emitted]  runtime
+                     index.html  353 bytes          [emitted]
+Entrypoint main = runtime.725a1a51ede5ae0cfde0.js vendors.55e79e5927a639d21a1b.js main.216e852f60c8829c2289.js
+[YuTi] (webpack)/buildin/module.js 497 bytes {1} [built]
+[tjUo] ./src/index.js + 1 modules 408 bytes {0} [built]
+    | ./src/index.js 341 bytes [built]
+    | ./src/print.js 62 bytes [built]
+[yLpj] (webpack)/buildin/global.js 489 bytes {1} [built]
     + 1 hidden module
+Child html-webpack-plugin for "index.html":
+     1 asset
+    Entrypoint undefined = index.html
+    [YuTi] (webpack)/buildin/module.js 497 bytes {0} [built]
+    [yLpj] (webpack)/buildin/global.js 489 bytes {0} [built]
+        + 2 hidden modules
 ```
 
 然后，修改我们的 `src/index.js`，临时移除额外的依赖：
@@ -370,22 +371,28 @@ __src/index.js__
 最后，再次运行我们的构建：
 
 ``` bash
-Hash: 37e1358f135c0b992f72
-Version: webpack 3.3.0
-Time: 1557ms
-                           Asset       Size  Chunks                    Chunk Names
-  vendor.eed6dcc3b30cfa138aaa.js     541 kB       0  [emitted]  [big]  vendor
-    main.fc7f38e648da79db2aba.js  891 bytes       1  [emitted]         main
-manifest.bb5820632fb66c3fb357.js    5.85 kB       2  [emitted]         manifest
-                      index.html  352 bytes          [emitted]
-[3IRH] (webpack)/buildin/module.js 517 bytes {0} [built]
-[DuR2] (webpack)/buildin/global.js 509 bytes {0} [built]
-   [0] multi lodash 28 bytes {0} [built]
-[lVK7] ./src/index.js 427 bytes {1} [built]
+Hash: 70fb9e00dee0bada797d
+Version: webpack 4.16.2
+Time: 875ms
+                          Asset       Size  Chunks             Chunk Names
+   main.ad717f2466ce655fff5c.js  274 bytes       0  [emitted]  main
+vendors.55e79e5927a639d21a1b.js   69.5 KiB       1  [emitted]  vendors
+runtime.725a1a51ede5ae0cfde0.js   1.42 KiB       2  [emitted]  runtime
+                     index.html  353 bytes          [emitted]
+Entrypoint main = runtime.725a1a51ede5ae0cfde0.js vendors.55e79e5927a639d21a1b.js main.ad717f2466ce655fff5c.js
+[YuTi] (webpack)/buildin/module.js 497 bytes {1} [built]
+[tjUo] ./src/index.js 347 bytes {0} [built]
+[yLpj] (webpack)/buildin/global.js 489 bytes {1} [built]
     + 1 hidden module
+Child html-webpack-plugin for "index.html":
+     1 asset
+    Entrypoint undefined = index.html
+    [YuTi] (webpack)/buildin/module.js 497 bytes {0} [built]
+    [yLpj] (webpack)/buildin/global.js 489 bytes {0} [built]
+        + 2 hidden modules
 ```
 
-我们可以看到，这两次构建中，`vendor` bundle 的文件名称，都是 `eed6dcc3b30cfa138aaa`。
+我们可以看到，这两次构建中，`vendor` bundle 的文件名称，都是 `55e79e5927a639d21a1b `。
 
 
 ## 结论
